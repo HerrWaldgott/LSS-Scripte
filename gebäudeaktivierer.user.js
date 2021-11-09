@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GebäudeAktivierer
-// @version      1.0.1
+// @version      1.0.2
 // @description  Gebäudetypen auf einem Klick aktiveren oder deaktiveren
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/
@@ -40,7 +40,6 @@ var aBuildings = aBuildings || [];
     var aBuildings = JSON.parse(LZString.decompressFromUTF16(JSON.parse(sessionStorage.aBuildings).value));
 
     function activate(type, enabled) {
-		$('#counter').css("display", "block");
 		$('#counter').html("0 / " + aBuildings.length + " Gebäude überprüft");
         for (var i = 0; i < aBuildings.length; i++) {
 			var b = aBuildings[i];
@@ -72,11 +71,9 @@ var aBuildings = aBuildings || [];
 			$('#counter').html(i + " / " + aBuildings.length + " Gebäude überprüft");
         }
 
-		$('#counter').css("display", "none");
     }
 
 	function activateBuilding(type, enabled) {
-		$('#counter').css("display", "block");
 		$('#counter').html("0 / " + aBuildings.length + " Gebäude überprüft");
         for (var i = 0; i < aBuildings.length; i++) {
 			var b = aBuildings[i];
@@ -108,7 +105,6 @@ var aBuildings = aBuildings || [];
 			$('#counter').html(i + " / " + aBuildings.length + " Gebäude überprüft");
         }
 
-		$('#counter').css("display", "none");
 	}
 
 	$('body').append(`
