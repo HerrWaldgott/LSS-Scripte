@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GebäudeAktivierer
-// @version      1.0.0
+// @version      1.0.1
 // @description  Gebäudetypen auf einem Klick aktiveren oder deaktiveren
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/
@@ -355,11 +355,11 @@ var aBuildings = aBuildings || [];
     });
 
 	$('#thw_fwp_de').on('click', function(){
-        activate("Fachgruppe Wasserschaden", true);
+        activate("Fachgruppe Wasserschaden/Pumpen", true);
     });
 
     $('#thw_fwp_ac').on('click', function(){
-        activate("Fachgruppe Wasserschaden", false);
+        activate("Fachgruppe Wasserschaden/Pumpen", false);
     });
 
 	$('#pd_dhs_de').on('click', function(){
