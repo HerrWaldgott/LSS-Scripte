@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GebäudeAktivierer
-// @version      1.0.8
+// @version      1.1.0
 // @description  Gebäudetypen auf einem Klick aktiveren oder deaktiveren
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/
@@ -28,6 +28,7 @@ function sleep(delay) {
 }
 
 var aBuildings = aBuildings || [];
+var aBuildingTypes = aBuildingTypes || [];
 
 (async function () {
 	'use strict';
@@ -39,32 +40,26 @@ var aBuildings = aBuildings || [];
     }
     var aBuildings = JSON.parse(LZString.decompressFromUTF16(JSON.parse(sessionStorage.aBuildings).value));
 
+    if (!sessionStorage.aBuildingTypes || JSON.parse(sessionStorage.aBuildingTypes).lastUpdate < (new Date().getTime() - 5 * 1000 * 60) || JSON.parse(sessionStorage.aBuildingTypes).userId != user_id) {
+        await $.getJSON('https://proxy.lss-manager.de/v4/api/de_DE/buildings.json').done(data => sessionStorage.setItem('aBuildingTypes', JSON.stringify({ lastUpdate: new Date().getTime(), value: LZString.compressToUTF16(JSON.stringify(data)), userId: user_id })));
+    }
+    var aBuildingTypes = JSON.parse(LZString.decompressFromUTF16(JSON.parse(sessionStorage.aBuildingTypes).value));
+
     function activate(type, enabled) {
 		document.getElementById('counter').innerHTML = ("0 / " + aBuildings.length + " Gebäude überprüft");
+        var buildingType = null;
         for (var i = 0; i < aBuildings.length; i++) {
 			var b = aBuildings[i];
-            b.extensions.forEach(e => {
-                if (e.caption == type) {
-                    if (e.enabled == enabled) {
-                        $.get("https://www.leitstellenspiel.de/buildings/" + b.id, function (data, status) {
-                            var parser = new DOMParser();
-                            var htmlDoc = parser.parseFromString(data, 'text/html');
-                            var div = htmlDoc.getElementById('ausbauten');
-                            var table = div.childNodes[1];
-                            for (var i = 1; i < table.rows.length; i++){
-                                var row = table.rows[i];
-                                var caption = row.cells[0];
-                                var button = row.cells[3];
-                                if (caption.innerHTML.includes(type)){
-                                    var url = button.childNodes[5].href;
-                                    sendPost(url);
-                                    sleep(1000);
-                                    break;
-                                }
-                            }
-                        });
-                        e.enabled = !enabled;
-                    }
+            b.extensions.forEach((e, ind) => {
+                if (e.caption.includes(type) && e.enabled == enabled){
+                    aBuildingTypes[b.building_type].extensions.forEach((apiE, apiInd) => {
+                        if (e.caption == apiE.caption) {
+                            var url = "https://www.leitstellenspiel.de/buildings/" + b.id + "/extension_ready/" + apiInd + "/" + b.id;
+                            sendPost(url);
+                            sleep(1000);
+                            e.enabled = !enabled;
+                        }
+                    });
                 }
             });
 			document.getElementById('counter').innerHTML = ( (i+1) + " / " + aBuildings.length + " Gebäude überprüft");
