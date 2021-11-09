@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GebäudeAktivierer
-// @version      1.0.5
+// @version      1.0.6
 // @description  Gebäudetypen auf einem Klick aktiveren oder deaktiveren
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/
@@ -67,7 +67,7 @@ var aBuildings = aBuildings || [];
                     }
                 }
             });
-			sleep(1000);
+			sleep(500);
 			$('#counter').html( (i+1) + " / " + aBuildings.length + " Gebäude überprüft");
         }
 	    $('#counter').html(aBuildings.length + " Gebäude");
@@ -102,7 +102,7 @@ var aBuildings = aBuildings || [];
                     }
                 });
 			}
-			sleep(1000);
+			sleep(500);
 			$('#counter').html( (i+1) + " / " + aBuildings.length + " Gebäude überprüft");
         }
 	    $('#counter').html(aBuildings.length + " Gebäude");
