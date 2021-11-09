@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GebäudeAktivierer
-// @version      1.0.6
+// @version      1.0.8
 // @description  Gebäudetypen auf einem Klick aktiveren oder deaktiveren
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/
@@ -40,7 +40,7 @@ var aBuildings = aBuildings || [];
     var aBuildings = JSON.parse(LZString.decompressFromUTF16(JSON.parse(sessionStorage.aBuildings).value));
 
     function activate(type, enabled) {
-		$('#counter').html("0 / " + aBuildings.length + " Gebäude überprüft");
+		document.getElementById('counter').innerHTML = ("0 / " + aBuildings.length + " Gebäude überprüft");
         for (var i = 0; i < aBuildings.length; i++) {
 			var b = aBuildings[i];
             b.extensions.forEach(e => {
@@ -67,15 +67,13 @@ var aBuildings = aBuildings || [];
                     }
                 }
             });
-			sleep(500);
-			$('#counter').html( (i+1) + " / " + aBuildings.length + " Gebäude überprüft");
+			document.getElementById('counter').innerHTML = ( (i+1) + " / " + aBuildings.length + " Gebäude überprüft");
         }
-	    $('#counter').html(aBuildings.length + " Gebäude");
-
+	document.getElementById('counter').innerHTML = (aBuildings.length + " Gebäude");
     }
 
 	function activateBuilding(type, enabled) {
-		$('#counter').html("0 / " + aBuildings.length + " Gebäude überprüft");
+		document.getElementById('counter').innerHTML = ("0 / " + aBuildings.length + " Gebäude überprüft");
         for (var i = 0; i < aBuildings.length; i++) {
 			var b = aBuildings[i];
 			if (b.building_type == type) {
@@ -102,10 +100,9 @@ var aBuildings = aBuildings || [];
                     }
                 });
 			}
-			sleep(500);
-			$('#counter').html( (i+1) + " / " + aBuildings.length + " Gebäude überprüft");
+			document.getElementById('counter').innerHTML = ( (i+1) + " / " + aBuildings.length + " Gebäude überprüft");
         }
-	    $('#counter').html(aBuildings.length + " Gebäude");
+	    document.getElementById('counter').innerHTML = (aBuildings.length + " Gebäude");
 	}
 
 	$('body').append(`
