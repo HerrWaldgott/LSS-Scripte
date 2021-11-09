@@ -238,6 +238,8 @@ var aBuildings = aBuildings || [];
 			<span style="margin-left: auto; margin-right: auto" id="counter"></span>
 		</div>
 	`);
+	
+	$('#counter').html(aBuildings.length + " Gebäude");
 
 	$('.nav.navbar-nav.navbar-right').append(`
 		<li class="dropdown" id="builActivate">
