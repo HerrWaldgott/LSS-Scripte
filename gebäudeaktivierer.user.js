@@ -96,22 +96,7 @@ var aBuildingTypes = aBuildingTypes || [];
                                  for (var i = 0; i < aBuildings.length; i++) {
                                      var b = aBuildings[i];
                                      if (b.building_type == type) {
-                                         this.get("https://www.leitstellenspiel.de/buildings/" + b.id, function (data, status) {
-                                             var parser = new DOMParser();
-                                             var htmlDoc = parser.parseFromString(data, 'text/html');
-                                             var div = htmlDoc.getElementById('iframe-inside-container');
-                                             var div2 = div.childNodes[9];
-                                             var dd = div2.childNodes[7];
-                                             var url = "";
-                                             var btn = dd.childNodes[3];
-                                             if ((dd.innerHTML.includes("Nicht Einsatzbereit") && !enabled) || (!dd.innerHTML.includes("Nicht Einsatzbereit") && enabled)){
-                                                 if (!enabled){
-                                                     var url = (btn.href);
-                                                     self.postMessage(['url', url]);
-                                                     b.enabled = !b.enabled;
-                                                 }
-                                             }
-                                         });
+                                     	self.postMessage(['url', b.id]);
                                      }
                                      self.postMessage(['status', i]);
                                      }
@@ -123,7 +108,23 @@ var aBuildingTypes = aBuildingTypes || [];
             if (e.data[0] == 'status') {
                 document.getElementById('counter').innerHTML = ((e.data[1] + 1) + " / " + aBuildings.length + " Gebäude überprüft");
             } else if (e.data[0] == 'url') {
-                sendGet(e.data[1]);
+		var bid = e.data[1];
+                this.get("https://www.leitstellenspiel.de/buildings/" + bid, function (data, status) {
+		     var parser = new DOMParser();
+		     var htmlDoc = parser.parseFromString(data, 'text/html');
+		     var div = htmlDoc.getElementById('iframe-inside-container');
+		     var div2 = div.childNodes[9];
+		     var dd = div2.childNodes[7];
+		     var url = "";
+		     var btn = dd.childNodes[3];
+		     if ((dd.innerHTML.includes("Nicht Einsatzbereit") && !enabled) || (!dd.innerHTML.includes("Nicht Einsatzbereit") && enabled)){
+			 if (!enabled){
+			     var url = (btn.href);
+			     sendGet(url);
+			     b.enabled = !b.enabled;
+			 }
+		     }
+		 });
                 sleep(300);
             } else if (e.data[0] == 'finish') {
                 document.getElementById('counter').innerHTML = ("alle Gebäude überprüft");
