@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GebäudeAktivierer
-// @version      1.1.1
+// @version      1.1.2
 // @description  Gebäudetypen auf einem Klick aktiveren oder deaktiveren
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/
@@ -46,26 +46,43 @@ var aBuildingTypes = aBuildingTypes || [];
     var aBuildingTypes = JSON.parse(LZString.decompressFromUTF16(JSON.parse(sessionStorage.aBuildingTypes).value));
 
     function activate(type, enabled) {
-		document.getElementById('counter').innerHTML = ("0 / " + aBuildings.length + " Gebäude überprüft");
-        var buildingType = null;
-        for (var i = 0; i < aBuildings.length; i++) {
-			var b = aBuildings[i];
-            b.extensions.forEach((e, ind) => {
-                if (e.caption.includes(type) && e.enabled == enabled){
-                    aBuildingTypes[b.building_type].extensions.forEach((apiE, apiInd) => {
-                        if (e.caption == apiE.caption) {
-                            var url = "https://www.leitstellenspiel.de/buildings/" + b.id + "/extension_ready/" + apiInd + "/" + b.id;
-                            sendPost(url);
-                            sleep(200);
-                            e.enabled = !enabled;
-                        }
-                    });
-                }
-            });
-			document.getElementById('counter').innerHTML = ( (i+1) + " / " + aBuildings.length + " Gebäude überprüft");
-            console.log((i+1) + " / "+aBuildings.length);
+        var blob = new Blob([`onmessage = function(e){
+                                 var buildingType = null;
+                                 var aBuildingTypes = e.data[3];
+                                 var aBuildings = e.data[2];
+                                 var type = e.data[0];
+                                 var enabled = e.data[1];
+                                 for (var i = 0; i < aBuildings.length; i++) {
+			                         var b = aBuildings[i];
+                                     b.extensions.forEach((e, ind) => {
+                                         if (e.caption.includes(type) && e.enabled == enabled){
+                                             aBuildingTypes[b.building_type].extensions.forEach((apiE, apiInd) => {
+                                                 if (e.caption == apiE.caption) {
+                                                     var url = "https://www.leitstellenspiel.de/buildings/" + b.id + "/extension_ready/" + apiInd + "/" + b.id;
+                                                     self.postMessage(['url', url, i]);
+                                                     e.enabled = !enabled;
+                                                 }
+                                             });
+                                         }
+                                     });
+                                     self.postMessage(['status', i]);
+                                 }
+                                 self.postMessage(['finish', aBuildings]);
+                             }`], {type: 'text/javascript'})
+        var url = URL.createObjectURL(blob)
+        var worker = new Worker(url)
+        worker.onmessage = function(e){
+            if (e.data[0] == 'status') {
+                document.getElementById('counter').innerHTML = ((e.data[1] + 1) + " / " + aBuildings.length + " Gebäude überprüft");
+            } else if (e.data[0] == 'url') {
+                sendPost(e.data[1]);
+                sleep(200);
+            } else if (e.data[0] == 'finish') {
+                document.getElementById('counter').innerHTML = ("alle Gebäude überprüft");
+                aBuildings = e.data[1];
+            }
         }
-	document.getElementById('counter').innerHTML = (aBuildings.length + " Gebäude");
+        worker.postMessage([type, enabled, aBuildings, aBuildingTypes]);
     }
 
 	function activateBuilding(type, enabled) {
