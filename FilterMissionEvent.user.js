@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         FilterMissionEvent
-// @version      1.3.0
+// @version      1.3.1
 // @description  Filtert die Einsätze nach dem Icon vor der Bezeichnung
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/
@@ -28,7 +28,7 @@
             <a href="#" class="btn btn-xs btn-success" id="btnFilterStar"><span class="glyphicon glyphicon-asterisk"></span></a>
             <a href="#" class="btn btn-xs btn-danger" id="btnSortAbc" ><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
             <a href="#" class="btn btn-xs btn-danger" id="btnSortCredits"><span class="glyphicon glyphicon-sort-by-attributes"></span></a>
-            <a href="#" class="btn btn-xs btn-danger" id="btnSortTime"><span class="glyphicon glyphicon-sort-by-order"></span></a>
+            <a href="#" class="btn btn-xs btn-danger" id="btnSortTime"><span class="glyphicon glyphicon-time"></span></a>
         </div>`);
 
     $( "#btnFilterStar" ).click(function() {
@@ -128,12 +128,8 @@
         }
 
         if (!sortTime) {
-            $('#btnSortTime').children().addClass("glyphicon-sort-by-order");
-            $('#btnSortTime').children().removeClass("glyphicon-sort-by-order-alt");
             sortTime = true;
         } else {
-            $('#btnSortTime').children().removeClass("glyphicon-sort-by-order");
-            $('#btnSortTime').children().addClass("glyphicon-sort-by-order-alt");
             sortTime = false;
         }
         sortMissions("time");
