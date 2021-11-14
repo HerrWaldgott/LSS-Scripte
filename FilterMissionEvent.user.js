@@ -1,18 +1,24 @@
 // ==UserScript==
 // @name         FilterMissionEvent
-// @version      1.1.0
+// @version      1.2.0
 // @description  Filtert die Einsätze nach dem Icon vor der Bezeichnung
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/
 // @grant        none
 // ==/UserScript==
 
-(function() {
+(async function() {
     'use strict';
 
     var showPersonMission = true;
     var showStarMission = true;
     var sortAbc = null;
+    var sortCredits = null;
+
+    //if (!sessionStorage.aMissions || JSON.parse(sessionStorage.aMissions).lastUpdate < (new Date().getTime() - 5 * 1000 * 60)) {
+        await $.getJSON('/einsaetze.json').done(data => sessionStorage.setItem('aMissions', JSON.stringify({ lastUpdate: new Date().getTime(), value: data})));
+    //}
+    var aMissions = JSON.parse(sessionStorage.aMissions).value;
 
     $('#btn-group-mission-select').after(`
         <div style="margin-top: 5px;">
@@ -20,6 +26,7 @@
             <a href="#" class="btn btn-xs btn-success" id="btnFilterPerson"><span class="glyphicon glyphicon-user"></span></a>
             <a href="#" class="btn btn-xs btn-success" id="btnFilterStar"><span class="glyphicon glyphicon-asterisk"></span></a>
             <a href="#" class="btn btn-xs btn-danger" id="btnSortAbc" ><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+            <a href="#" class="btn btn-xs btn-danger" id="btnSortCredits"><span class="glyphicon glyphicon-sort-by-attributes"></span></a>
         </div>`);
 
     $( "#btnFilterStar" ).click(function() {
@@ -68,6 +75,29 @@
         sortMissions("abc");
     });
 
+    $( "#btnSortCredits" ).click(function() {
+        if (sortCredits == null){
+            $('#btnSortCredits').addClass("btn-success");
+            $('#btnSortCredits').removeClass("btn-danger");
+            sortCredits = false;
+
+            $('#btnSortAbc').removeClass("btn-success");
+            $('#btnSortAbc').addClass("btn-danger");
+            sortAbc = null;
+        }
+
+        if (!sortCredits) {
+            $('#btnSortCredits').children().addClass("glyphicon-sort-by-attributes");
+            $('#btnSortCredits').children().removeClass("glyphicon-sort-by-attributes-alt");
+            sortCredits = true;
+        } else {
+            $('#btnSortCredits').children().removeClass("glyphicon-sort-by-attributes");
+            $('#btnSortCredits').children().addClass("glyphicon-sort-by-attributes-alt");
+            sortCredits = false;
+        }
+        sortMissions("credits");
+    });
+
     function filterMissions (){
         $(`#mission_list_sicherheitswache > .missionSideBarEntry,
            #mission_list_krankentransporte > .missionSideBarEntry,
@@ -98,16 +128,16 @@
     }
 
     function sortMissions (order){
-        if (order == "abc") {
-            var allLists = [];
-            var mL = $("#mission_list > .missionSideBarEntry"), mA = $("#mission_list_alliance > .missionSideBarEntry"),
-                mK = $("#mission_list_krankentransporte > .missionSideBarEntry"), mAE = $("#mission_list_alliance_event > .missionSideBarEntry"),
-                mS = $("#mission_list_sicherheitswache > .missionSideBarEntry");
-            allLists.push(mL);
-            allLists.push(mS);
-            allLists.push(mK);
-            allLists.push(mA);
-            allLists.push(mAE);
+        var allLists = [];
+        var mL = $("#mission_list > .missionSideBarEntry"), mA = $("#mission_list_alliance > .missionSideBarEntry"),
+            mK = $("#mission_list_krankentransporte > .missionSideBarEntry"), mAE = $("#mission_list_alliance_event > .missionSideBarEntry"),
+            mS = $("#mission_list_sicherheitswache > .missionSideBarEntry");
+        allLists.push(mL);
+        allLists.push(mS);
+        allLists.push(mK);
+        allLists.push(mA);
+        allLists.push(mAE);
+        if (order == "abc") {            
             if (sortAbc) {
                 allLists.forEach(list => {
                     list.sort(function (e, t) {
@@ -126,6 +156,62 @@
                     list.sort(function (e, t) {
                         var one = $(e).find("a.map_position_mover").clone().children().remove().end().text();
                         var two = $(t).find("a.map_position_mover").clone().children().remove().end().text();
+                        return one < two ? 1 : one > two ? -1 : 0
+                    });
+                });
+                mL.appendTo("#mission_list");
+                mK.appendTo("#mission_list_krankentransporte");
+                mS.appendTo("#mission_list_sicherheitswache");
+                mA.appendTo("#mission_list_alliance");
+                mAE.appendTo("#mission_list_alliance_event");
+            }
+        } else if (order == "credits"){
+            if (sortCredits) {
+                allLists.forEach(list => {
+                    for (var i = 0; i < list.length; i++) {
+                        if (isNaN(+$(list[i]).attr("average_credits"))) {
+                            var typeID = +$(list[i]).attr('mission_type_id');
+                            var missionType = aMissions.filter(m => m.id == typeID)[0];
+                            var credits = 0;
+                            if (missionType === undefined) {
+                                credits = 0;
+                            } else if (missionType.average_credits == null){
+                                var patients = missionType.additional.possible_patient_min;
+                                credits = 250 * patients;
+                            } else {
+                                credits = missionType.average_credits;
+                            }
+                            +$(list[i]).attr('average_credits', credits);
+                        }
+                    }
+                    list.sort(function (e, t) {
+                        var one = +$(e).attr("average_credits");
+                        var two = +$(t).attr("average_credits");
+                        return one < two ? -1 : one > two ? 1 : 0
+                    });
+                });
+                mL.appendTo("#mission_list");
+                mK.appendTo("#mission_list_krankentransporte");
+                mS.appendTo("#mission_list_sicherheitswache");
+                mA.appendTo("#mission_list_alliance");
+                mAE.appendTo("#mission_list_alliance_event");
+            } else {
+                allLists.forEach(list => {
+                    for (var i = 0; i < list.length; i++) {
+                        if (isNaN(+$(list[i]).attr("average_credits"))) {
+                            var typeID = +$(list[i]).attr('mission_type_id');
+                            var missionType = aMissions.filter(m => m.id == typeID)[0];
+                            if (missionType === undefined) {
+                                var credits = 0;
+                            } else {
+                                var credits = missionType.average_credits;
+                            }
+                            +$(list[i]).attr('average_credits', credits);
+                        }
+                    }
+                    list.sort(function (e, t) {
+                        var one = +$(e).attr("average_credits");
+                        var two = +$(t).attr("average_credits");
                         return one < two ? 1 : one > two ? -1 : 0
                     });
                 });
