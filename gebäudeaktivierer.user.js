@@ -8,17 +8,23 @@
 // @namespace    https://github.com/HerrWaldgott/LSS-Scripte/raw/main/geb%C3%A4udeaktivierer.js
 // ==/UserScript==
 async function sendPost(url) {
-    await $.post(url,
+    await new Promise(resolve => {
+    	await $.post(url,
 	{
 		"authenticity_token": $("meta[name=csrf-token]").attr("content"),
 		"_method": "post"
 	});
+	window.setTimeout(resolve, 100);
+    });
 }
 
 async function sendGet(Url) {
-    $.ajax({
-        url: Url,
-        cache: true
+    await new Promise(resolve => {
+	$.ajax({
+		url: Url,
+		cache: true
+	});
+	window.setTimeout(resolve, 100);
     });
 }
 
