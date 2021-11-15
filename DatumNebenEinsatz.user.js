@@ -10,7 +10,12 @@
 
 (async function() {
     'use strict';
-
+    
+    function sleep(delay) {
+        var start = new Date().getTime();
+        while (new Date().getTime() < start + delay);
+    }
+    
     $('#mission_list_sicherheitswache > .missionSideBarEntry, #mission_list_krankentransporte > .missionSideBarEntry, #mission_list > .missionSideBarEntry').each(function(){
         var $this = $(this);
         var $attributes = $this[0].attributes;
@@ -33,5 +38,6 @@
             var id = "mission_panel_heading_" + missionId;
             $('#' + id).append("<small> (" + d + ")</span>");
         });
+        sleep(200);
     });
 })();
