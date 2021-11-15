@@ -1,17 +1,17 @@
 // ==UserScript==
 // @name         DatumNebenEinsatz
-// @version      1.0.1
+// @version      1.0.2
 // @description  Erstelldatum des Einsatzes in Einsatzliste anzeigen
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/
 // @grant        none
-// @namespace    https://github.com/HerrWaldgott/LSS-Scripte/raw/main/geb%C3%A4udeaktivierer.js
+// @namespace    https://github.com/HerrWaldgott/LSS-Scripte/blob/main/DatumNebenEinsatz.user.js
 // ==/UserScript==
 
 (async function() {
     'use strict';
     
-    $('#mission_list_sicherheitswache > .missionSideBarEntry, #mission_list_krankentransporte > .missionSideBarEntry, #mission_list > .missionSideBarEntry').each(function(){
+    $('#mission_list_sicherheitswache > .missionSideBarEntry, #mission_list_krankentransporte > .missionSideBarEntry, #mission_list > .missionSideBarEntry').each(async function(){
         var $this = $(this);
         var $attributes = $this[0].attributes;
         var missionId = +($attributes).mission_id.value;
