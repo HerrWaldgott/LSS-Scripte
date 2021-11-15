@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         DatumNebenEinsatz
-// @version      1.0.0
+// @version      1.0.1
 // @description  Erstelldatum des Einsatzes in Einsatzliste anzeigen
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/
