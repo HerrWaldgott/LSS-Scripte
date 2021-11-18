@@ -6,6 +6,7 @@
 // @include      *://www.leitstellenspiel.de/profile/*
 // @include      *://www.leitstellenspiel.de/auszeichnungen
 // @grant        none
+// @namespace    https://github.com/HerrWaldgott/LSS-Scripte/raw/main/GoldenAwardsInNewTab.user.js
 // ==/UserScript==
 
 (function() {
