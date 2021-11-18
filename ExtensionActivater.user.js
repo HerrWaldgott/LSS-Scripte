@@ -5,7 +5,7 @@
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/
 // @grant        none
-// @namespace    https://github.com/HerrWaldgott/LSS-Scripte/raw/main/geb%C3%A4udeaktivierer.js
+// @namespace    https://github.com/HerrWaldgott/LSS-Scripte/raw/main/ExtensionActivater.user.js
 // ==/UserScript==
 async function sendPost(url) {
     await $.post(url,
