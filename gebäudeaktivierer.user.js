@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GebäudeAktivierer
-// @version      1.1.5
+// @version      1.2.0
 // @description  Gebäudetypen auf einem Klick aktiveren oder deaktiveren
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/
@@ -8,23 +8,17 @@
 // @namespace    https://github.com/HerrWaldgott/LSS-Scripte/raw/main/geb%C3%A4udeaktivierer.js
 // ==/UserScript==
 async function sendPost(url) {
-    await new Promise(resolve => {
-    	await $.post(url,
+    await $.post(url,
 	{
 		"authenticity_token": $("meta[name=csrf-token]").attr("content"),
 		"_method": "post"
 	});
-	window.setTimeout(resolve, 100);
-    });
 }
 
 async function sendGet(Url) {
-    await new Promise(resolve => {
-	$.ajax({
-		url: Url,
-		cache: true
-	});
-	window.setTimeout(resolve, 100);
+    $.ajax({
+        url: Url,
+        cache: true
     });
 }
 
@@ -102,7 +96,22 @@ var aBuildingTypes = aBuildingTypes || [];
                                  for (var i = 0; i < aBuildings.length; i++) {
                                      var b = aBuildings[i];
                                      if (b.building_type == type) {
-                                     	self.postMessage(['url', b.id]);
+                                         this.get("https://www.leitstellenspiel.de/buildings/" + b.id, function (data, status) {
+                                             var parser = new DOMParser();
+                                             var htmlDoc = parser.parseFromString(data, 'text/html');
+                                             var div = htmlDoc.getElementById('iframe-inside-container');
+                                             var div2 = div.childNodes[9];
+                                             var dd = div2.childNodes[7];
+                                             var url = "";
+                                             var btn = dd.childNodes[3];
+                                             if ((dd.innerHTML.includes("Nicht Einsatzbereit") && !enabled) || (!dd.innerHTML.includes("Nicht Einsatzbereit") && enabled)){
+                                                 if (!enabled){
+                                                     var url = (btn.href);
+                                                     self.postMessage(['url', url]);
+                                                     b.enabled = !b.enabled;
+                                                 }
+                                             }
+                                         });
                                      }
                                      self.postMessage(['status', i]);
                                      }
@@ -114,23 +123,7 @@ var aBuildingTypes = aBuildingTypes || [];
             if (e.data[0] == 'status') {
                 document.getElementById('counter').innerHTML = ((e.data[1] + 1) + " / " + aBuildings.length + " Gebäude überprüft");
             } else if (e.data[0] == 'url') {
-		var bid = e.data[1];
-                this.get("https://www.leitstellenspiel.de/buildings/" + bid, function (data, status) {
-		     var parser = new DOMParser();
-		     var htmlDoc = parser.parseFromString(data, 'text/html');
-		     var div = htmlDoc.getElementById('iframe-inside-container');
-		     var div2 = div.childNodes[9];
-		     var dd = div2.childNodes[7];
-		     var url = "";
-		     var btn = dd.childNodes[3];
-		     if ((dd.innerHTML.includes("Nicht Einsatzbereit") && !enabled) || (!dd.innerHTML.includes("Nicht Einsatzbereit") && enabled)){
-			 if (!enabled){
-			     var url = (btn.href);
-			     sendGet(url);
-			     b.enabled = !b.enabled;
-			 }
-		     }
-		 });
+                sendGet(e.data[1]);
                 sleep(300);
             } else if (e.data[0] == 'finish') {
                 document.getElementById('counter').innerHTML = ("alle Gebäude überprüft");
@@ -202,6 +195,7 @@ var aBuildingTypes = aBuildingTypes || [];
 						<div class="col-md-6">
 							<button href="#"  id="pd_dhs_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Diensthundestaffel deaktivieren</button>
 							<button href="#"  id="pd_kri_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Kriminalpolizei deaktivieren</button>
+                            <button href="#"  id="pd_dgl_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Dienstgruppenleitung deaktivieren</button>
 							<button href="#"  id="pd_2z1_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">2. Zug der 1. Hundertschaft deaktivieren</button>
 							<button href="#"  id="pd_3z1_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">3. Zug der 1. Hundertschaft deaktivieren</button>
 							<button href="#"  id="pd_gef_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Gefangenenkraftwagen deaktivieren</button>
@@ -214,6 +208,7 @@ var aBuildingTypes = aBuildingTypes || [];
 						<div class="col-md-6">
 							<button href="#"  id="pd_dhs_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Diensthundestaffel aktivieren</button>
 							<button href="#"  id="pd_kri_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Kriminalpolizei aktivieren</button>
+                            <button href="#"  id="pd_dgl_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Dienstgruppenleitung aktivieren</button>
 							<button href="#"  id="pd_2z1_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">2. Zug der 1. Hundertschaft aktivieren</button>
 							<button href="#"  id="pd_3z1_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">3. Zug der 1. Hundertschaft aktivieren</button>
 							<button href="#"  id="pd_gef_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Gefangenenkraftwagen aktivieren</button>
@@ -407,6 +402,14 @@ var aBuildingTypes = aBuildingTypes || [];
 
     $('#pd_kri_ac').on('click', function(){
         activate("Kriminalpolizei", false);
+    });
+    
+    $('#pd_dgl_de').on('click', function(){
+        activate("Dienstgruppenleitung", true);
+    });
+
+    $('#pd_dgl_ac').on('click', function(){
+        activate("Dienstgruppenleitung", false);
     });
 
 	$('#pd_2z1_de').on('click', function(){
