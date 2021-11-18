@@ -5,6 +5,7 @@
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/
 // @grant        none
+// @namespace    https://github.com/HerrWaldgott/LSS-Scripte/raw/main/FreigeberAnzeige.user.js
 // ==/UserScript==
 
 (function() {
