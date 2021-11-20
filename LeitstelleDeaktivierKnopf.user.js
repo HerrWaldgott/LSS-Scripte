@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         LeitstelleDeaktivierKnopf
-// @version      1.0.0
+// @version      1.1.0
 // @description  Erstellt einen Knopf zum deaktivieren einer Leitstelle
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
@@ -22,13 +22,13 @@
         if (active) {
             $('dl.dl-horizontal').append(`
             <dt><strong>Generiert Einsätze:</strong></dt>
-            <dd><a href="/buildings/` + buildingID + `/active" id="btnDeactivate" class="btn btn-xs btn-success">Aktiviert</a></dd>
+            <dd>Aktiviert  <a href="/buildings/` + buildingID + `/active" id="btnDeactivate" class="btn btn-xs btn-default">Umschalten</a></dd>
             `);
         }
         else {
             $('dl.dl-horizontal').append(`
             <dt><strong>Generiert Einsätze:</strong></dt>
-            <dd><a href="/buildings/` + buildingID + `/active" id="btnDeactivate" class="btn btn-xs btn-danger">Nicht Aktiviert</a></dd>
+            <dd>Deaktiviert  <a href="/buildings/` + buildingID + `/active" id="btnDeactivate" class="btn btn-xs btn-default">Umschalten</a></dd>
             `);
         }
     }
