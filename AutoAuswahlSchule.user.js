@@ -5,7 +5,7 @@
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
 // @grant        none
-// @namespace    
+// @namespace    https://github.com/HerrWaldgott/LSS-Scripte/raw/main/AutoAuswahlSchule.user.js
 // ==/UserScript==
 
 (async function() {
