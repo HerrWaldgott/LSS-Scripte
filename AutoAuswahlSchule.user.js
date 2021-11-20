@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AutoAuswahlSchule
-// @version      1.0.0
+// @version      1.1.0
 // @description  automatisches Auswählen für Lehrgänge (max Personen mit Lehrgang pro Wache)
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
@@ -31,6 +31,8 @@
                 <p style="display: inline-block">Max. Personal / Wache:</p>
                 <input style="display:inline-block; color: #000; width:50px;" type="number" id="maxPerBuilding" min="1" value="1"></input>
                 <a id="btnAutoSelect" class="btn btn-success">Auswählen</a>
+                <input id="noEduc" name="noEduc" type="checkbox">
+                <label class="" for="noEduc">nur Personal ohne Ausbildung</label>
             </div>
         `);
 
@@ -90,9 +92,17 @@
                         if (free > 0) {
                             var $row = $(this);
                             var $input = $($($row.find("td")[0]).find("input")[0]);
-                            if ($input.length && $input.attr(education_key) == "false" && !document.getElementById($input.attr("id")).checked){
-                                $input.click();
-                                free--;
+                            var currSchoolings = $($row.find('td[id^="school_personal_education"]')[0]).text().replace(/\s/g, "");
+                            if (!document.getElementById("noEduc").checked){
+                                if ($input.length && $input.attr(education_key) == "false" && !document.getElementById($input.attr("id")).checked){
+                                    $input.click();
+                                    free--;
+                                }
+                            } else {
+                                if ($input.length && currSchoolings == "" && !document.getElementById($input.attr("id")).checked){
+                                    $input.click();
+                                    free--;
+                                }
                             }
                         }
                     });
