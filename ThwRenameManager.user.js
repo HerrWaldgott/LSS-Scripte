@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ThwRenameManager
-// @version      1.1.0
+// @version      1.1.1
 // @description  Benennt alle Fahrzeuge auf der Wache nach BOS-Richtlinien um
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
@@ -51,6 +51,7 @@ async function renameVehicle(vID, vName) {
                 var firstGKW = true;
                 var firstMzKw = true;
                 var firstMtwTz = true;
+                var firstMtwOv = true;
                 switch (vehicleType){
                     case 39:
                         if (firstGKW) {
@@ -84,7 +85,11 @@ async function renameVehicle(vID, vName) {
                         break;
                     case 93:
                         org = "44";
-                        type = "/22";
+                        if (firstMtwOv){
+                            type = "/22";
+                        } else {
+                            type = "/23";
+                        }
                         typeName = "(MTW-OV)";
                         break;
                     case 92:
