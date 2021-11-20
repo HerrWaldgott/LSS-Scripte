@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ThwRenameManager
-// @version      1.1.1
+// @version      1.1.3
 // @description  Benennt alle Fahrzeuge auf der Wache nach BOS-Richtlinien um
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
@@ -29,7 +29,7 @@ async function renameVehicle(vID, vName) {
     var buildingID = (window.location.href.split("/")[4]).replace("#", "");
     var building = cBuildings.filter(b => b.id == buildingID)[0];
 
-    if (building.building_type == 9){
+    if (building.building_type == 9 && window.location.href == "https://www.leitstellenspiel.de/buildings/" + buildingID){
         $('dl.dl-horizontal').append(`
             <dt><strong>Fahrz. umbenennen:</strong></dt>
             <dd>
