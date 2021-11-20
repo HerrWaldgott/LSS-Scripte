@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AutoAuswahlSchule
-// @version      1.1.0
+// @version      1.1.1
 // @description  automatisches Auswählen für Lehrgänge (max Personen mit Lehrgang pro Wache)
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
@@ -89,7 +89,7 @@
                 var free = maxPerBuilding - currCount;
                 if (free > 0){
                     $tableBody.find('tr').each(function() {
-                        if (free > 0) {
+                        if (free > 0 || $('#schooling_free').text() == "0") {
                             var $row = $(this);
                             var $input = $($($row.find("td")[0]).find("input")[0]);
                             var currSchoolings = $($row.find('td[id^="school_personal_education"]')[0]).text().replace(/\s/g, "");
@@ -104,8 +104,14 @@
                                     free--;
                                 }
                             }
+                        } else {
+                            return;
                         }
                     });
+                }
+
+                if ($('#schooling_free').text() == "0") {
+                    return;
                 }
             });
         });
