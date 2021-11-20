@@ -5,6 +5,7 @@
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
 // @grant        none
+// @namespace    https://github.com/HerrWaldgott/LSS-Scripte/raw/main/ThwRenameManager.user.js
 // ==/UserScript==
 async function renameVehicle(vID, vName) {
     await $.post("/vehicles/" + vID, { "vehicle": { "caption": vName }, "authenticity_token": $("meta[name=csrf-token]").attr("content"), "_method": "put" });
