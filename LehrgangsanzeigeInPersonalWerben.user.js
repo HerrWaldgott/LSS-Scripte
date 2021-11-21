@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         LehrgangsanzeigeInPersonalWerben
-// @version      1.0.0
+// @version      1.1.0
 // @description  Zeigt in dem Bereich zum Verschieben von Personal die Anzahl der Lehrgänge pro Wache an
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*/hire
@@ -15,18 +15,16 @@
         var $building = $(this);
         var $buildingHeader = $($building.find("div.panel-heading")[0]);
         var buildingID = $buildingHeader.attr("building_id");
-        console.log(buildingID);
 
-
-        await new Promise(resolve => {
-            $.get($buildingHeader.attr("href"), function(data) {
-                var panelBody = $(".panel-body[building_id='" + buildingID + "']");
-                panelBody.html(data);
-            });
-            window.setTimeout(resolve, 1000);
+        var $data = await new Promise(resolve => {
+            let $tmp = $.get($buildingHeader.attr("href"));
+            setTimeout(function(){ resolve($tmp); }, 100);
+        }).then(function(value) {
+            return (value);
         });
 
-        var $tableBody = $($($($building.find('div.panel-body')[0]).find('table')[0]).find('tbody')[0]);
+        var $panelBody = $($.parseHTML($data));
+        var $tableBody = $($panelBody.find("tbody")[0]);
         var currCount = 0;
         var allSchooling = [];
         $tableBody.find('tr').each(function() {
