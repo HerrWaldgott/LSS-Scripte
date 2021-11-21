@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         KompakteWachenAnsichtInSchulen
-// @version      1.1.0
+// @version      1.1.1
 // @description  Gegliederte Ansicht der Wachen in einer Schule
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
@@ -129,7 +129,7 @@
                     break;
                 case 19:
                 case 6:
-                    $('#polizei').append($panel);
+                    $('#pol').append($panel);
                     break;
                 case 9:
                     $('#thw').append($panel);
