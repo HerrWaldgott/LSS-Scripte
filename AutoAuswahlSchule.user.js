@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AutoAuswahlSchule
-// @version      2.0.2
+// @version      2.0.3
 // @description  automatisches Auswählen für Lehrgänge (max Personen mit Lehrgang pro Wache) / Kategorien für Gebäude
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
