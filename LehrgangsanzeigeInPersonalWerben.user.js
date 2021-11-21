@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         LehrgangsanzeigeInPersonalWerben
-// @version      1.1.0
+// @version      1.2.0
 // @description  Zeigt in dem Bereich zum Verschieben von Personal die Anzahl der Lehrgänge pro Wache an
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*/hire
