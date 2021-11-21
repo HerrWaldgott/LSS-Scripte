@@ -18,7 +18,7 @@
 
         var $data = await new Promise(resolve => {
             let $tmp = $.get($buildingHeader.attr("href"));
-            setTimeout(function(){ resolve($tmp); }, 100);
+            setTimeout(function(){ resolve($tmp); }, 300);
         }).then(function(value) {
             return (value);
         });
