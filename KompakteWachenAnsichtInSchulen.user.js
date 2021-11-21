@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         KompakteWachenAnsichtInSchulen
-// @version      1.1.0
+// @version      1.0.0
 // @description  Gegliederte Ansicht der Wachen in einer Schule
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
