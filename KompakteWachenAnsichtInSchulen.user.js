@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         KompakteWachenAnsichtInSchulen
-// @version      1.1.1
+// @version      1.2.0
 // @description  Gegliederte Ansicht der Wachen in einer Schule
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
@@ -22,6 +22,10 @@
     var building = cBuildings.filter(b => b.id == buildingID)[0];
 
     if ((building.building_type == 1 || building.building_type == 3 || building.building_type == 8 || building.building_type == 10) && window.location.href == "https://www.leitstellenspiel.de/buildings/" + buildingID){
+        if ($('#tabsDiv').length) {
+              return;
+        }
+        
         $('#accordion').after(`
             <div id="tabsDiv">
                 <ul id="tabsBuilding" class="nav nav-tabs" role="tablist">
