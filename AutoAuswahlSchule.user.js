@@ -146,7 +146,7 @@
                     break;
                 case 19:
                 case 6:
-                    $('#polizei').append($panel);
+                    $('#pol').append($panel);
                     break;
                 case 9:
                     $('#thw').append($panel);
