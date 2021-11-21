@@ -27,8 +27,10 @@
         var $tableBody = $($panelBody.find("tbody")[0]);
         var currCount = 0;
         var allSchooling = [];
+        var countAllPersonnel = 0;
         $tableBody.find('tr').each(function() {
             var $row = $(this);
+            countAllPersonnel++;
             var schoolings = $($row.find('td[id^="school_personal_education"]')[0]).text().replace(/\s/g, "").split(',');
             schoolings.forEach(s => {
                 if (s != "") {
@@ -48,6 +50,10 @@
             tmp += "</span>";
             appendStr += tmp;
         }
+        var tmp = `<span class="label label-default" style="margin-right: 2px;">`;
+        tmp += countAllPersonnel + " Angestellte";
+        tmp += "</span>";
+        appendStr += tmp;
         appendStr += '</div>';
         $buildingHeader.append(appendStr);
 
