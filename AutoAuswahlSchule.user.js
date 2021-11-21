@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AutoAuswahlSchule
-// @version      2.0.0
+// @version      2.0.1
 // @description  automatisches Auswählen für Lehrgänge (max Personen mit Lehrgang pro Wache)
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
@@ -35,77 +35,80 @@
                 <label class="" for="noEduc">nur Personal ohne Ausbildung</label>
             </div>
         `);
-
-        $('#accordion').after(`
-            <div id="tabsDiv">
-                <ul id="tabsBuilding" class="nav nav-tabs" role="tablist">
-                    <li role="presentation" id="feuerwehrTab">
-                        <a href="#feuerwehr" aria-controls="feuerwehr" role="tab" data-toggle="tab">Feuerwehr</a>
-                    </li>
-                    <li role="presentation" class="" id="rettungsdienstTab">
-                        <a href="#rettungsdienst" aria-controls="rettungsdienst" role="tab" data-toggle="tab">Rettungsdienst</a>
-                    </li>
-                    <li role="presentation" class="" id="polizeiTab">
-                        <a href="#polizei" aria-controls="polizei" role="tab" data-toggle="tab">Polizei</a>
-                    </li>
-                    <li role="presentation" class="" id="thwTab">
-                        <a href="#thw" aria-controls="thw" role="tab" data-toggle="tab">THW</a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane" id="feuerwehr"></div>
-                    <div role="tabpanel" class="tab-pane" id="rettungsdienst">
-                        <ul id="tabsBuilding" class="nav nav-tabs" role="tablist">
-                            <li role="presentation" id="rdTab">
-                                <a href="#rd" aria-controls="rd" role="tab" data-toggle="tab">Rettungswache</a>
-                            </li>
-                            <li role="presentation" class="" id="rd_rhsTab">
-                                <a href="#rd_rhs" aria-controls="rd_rhs" role="tab" data-toggle="tab">Rettungshundestaffel</a>
-                            </li>
-                            <li role="presentation" class="" id="rd_segTab">
-                                <a href="#rd_seg" aria-controls="rd_seg" role="tab" data-toggle="tab">Schnelleinsatzgruppe</a>
-                            </li>
-                            <li role="presentation" class="" id="rd_rthTab">
-                                <a href="#rd_rth" aria-controls="rd_rth" role="tab" data-toggle="tab">Rettungshelikopter</a>
-                            </li>
-                            <li role="presentation" class="" id="rd_wrTab">
-                                <a href="#rd_wr" aria-controls="rd_wr" role="tab" data-toggle="tab">Wasserrettung</a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane" id="rd"></div>
-                            <div role="tabpanel" class="tab-pane" id="rd_rhs"></div>
-                            <div role="tabpanel" class="tab-pane" id="rd_seg"></div>
-                            <div role="tabpanel" class="tab-pane" id="rd_rth"></div>
-                            <div role="tabpanel" class="tab-pane" id="rd_wr"></div>
+        
+        if ($('#tabsDiv').length) {
+        } else {
+            $('#accordion').after(`
+                <div id="tabsDiv">
+                    <ul id="tabsBuilding" class="nav nav-tabs" role="tablist">
+                        <li role="presentation" id="feuerwehrTab">
+                            <a href="#feuerwehr" aria-controls="feuerwehr" role="tab" data-toggle="tab">Feuerwehr</a>
+                        </li>
+                        <li role="presentation" class="" id="rettungsdienstTab">
+                            <a href="#rettungsdienst" aria-controls="rettungsdienst" role="tab" data-toggle="tab">Rettungsdienst</a>
+                        </li>
+                        <li role="presentation" class="" id="polizeiTab">
+                            <a href="#polizei" aria-controls="polizei" role="tab" data-toggle="tab">Polizei</a>
+                        </li>
+                        <li role="presentation" class="" id="thwTab">
+                            <a href="#thw" aria-controls="thw" role="tab" data-toggle="tab">THW</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane" id="feuerwehr"></div>
+                        <div role="tabpanel" class="tab-pane" id="rettungsdienst">
+                            <ul id="tabsBuilding" class="nav nav-tabs" role="tablist">
+                                <li role="presentation" id="rdTab">
+                                    <a href="#rd" aria-controls="rd" role="tab" data-toggle="tab">Rettungswache</a>
+                                </li>
+                                <li role="presentation" class="" id="rd_rhsTab">
+                                    <a href="#rd_rhs" aria-controls="rd_rhs" role="tab" data-toggle="tab">Rettungshundestaffel</a>
+                                </li>
+                                <li role="presentation" class="" id="rd_segTab">
+                                    <a href="#rd_seg" aria-controls="rd_seg" role="tab" data-toggle="tab">Schnelleinsatzgruppe</a>
+                                </li>
+                                <li role="presentation" class="" id="rd_rthTab">
+                                    <a href="#rd_rth" aria-controls="rd_rth" role="tab" data-toggle="tab">Rettungshelikopter</a>
+                                </li>
+                                <li role="presentation" class="" id="rd_wrTab">
+                                    <a href="#rd_wr" aria-controls="rd_wr" role="tab" data-toggle="tab">Wasserrettung</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane" id="rd"></div>
+                                <div role="tabpanel" class="tab-pane" id="rd_rhs"></div>
+                                <div role="tabpanel" class="tab-pane" id="rd_seg"></div>
+                                <div role="tabpanel" class="tab-pane" id="rd_rth"></div>
+                                <div role="tabpanel" class="tab-pane" id="rd_wr"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="polizei">
-                        <ul id="tabsBuilding" class="nav nav-tabs" role="tablist">
-                            <li role="presentation" id="polTab">
-                                <a href="#pol" aria-controls="pol" role="tab" data-toggle="tab">Polizeiwache</a>
-                            </li>
-                            <li role="presentation" class="" id="pol_seTab">
-                                <a href="#pol_se" aria-controls="pol_se" role="tab" data-toggle="tab">Sondereinheiten</a>
-                            </li>
-                            <li role="presentation" class="" id="pol_pthTab">
-                                <a href="#pol_pth" aria-controls="pol_pth" role="tab" data-toggle="tab">Polizeihubschrauber</a>
-                            </li>
-                            <li role="presentation" class="" id="pol_bpTab">
-                                <a href="#pol_bp" aria-controls="pol_bp" role="tab" data-toggle="tab">Bereitschaftspolizei</a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane" id="pol"></div>
-                            <div role="tabpanel" class="tab-pane" id="pol_se"></div>
-                            <div role="tabpanel" class="tab-pane" id="pol_pth"></div>
-                            <div role="tabpanel" class="tab-pane" id="pol_bp"></div>
+                        <div role="tabpanel" class="tab-pane" id="polizei">
+                            <ul id="tabsBuilding" class="nav nav-tabs" role="tablist">
+                                <li role="presentation" id="polTab">
+                                    <a href="#pol" aria-controls="pol" role="tab" data-toggle="tab">Polizeiwache</a>
+                                </li>
+                                <li role="presentation" class="" id="pol_seTab">
+                                    <a href="#pol_se" aria-controls="pol_se" role="tab" data-toggle="tab">Sondereinheiten</a>
+                                </li>
+                                <li role="presentation" class="" id="pol_pthTab">
+                                    <a href="#pol_pth" aria-controls="pol_pth" role="tab" data-toggle="tab">Polizeihubschrauber</a>
+                                </li>
+                                <li role="presentation" class="" id="pol_bpTab">
+                                    <a href="#pol_bp" aria-controls="pol_bp" role="tab" data-toggle="tab">Bereitschaftspolizei</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane" id="pol"></div>
+                                <div role="tabpanel" class="tab-pane" id="pol_se"></div>
+                                <div role="tabpanel" class="tab-pane" id="pol_pth"></div>
+                                <div role="tabpanel" class="tab-pane" id="pol_bp"></div>
+                            </div>
                         </div>
+                        <div role="tabpanel" class="tab-pane" id="thw"></div>
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="thw"></div>
                 </div>
-            </div>
-        `);
+            `);
+        }
 
         $('#accordion > div.panel').each(function() {
             var $panel = $(this);
