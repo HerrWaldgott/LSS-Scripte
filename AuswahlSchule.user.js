@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name         AutoAuswahlSchule
-// @version      2.0.3
-// @description  automatisches Auswählen für Lehrgänge (max Personen mit Lehrgang pro Wache) / Kategorien für Gebäude
+// @name         AuswahlSchule
+// @version      2.0.4
+// @description  Auswählen für Lehrgänge (max Personen mit Lehrgang pro Wache) / Kategorien für Gebäude
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
 // @grant        none
-// @namespace    https://github.com/HerrWaldgott/LSS-Scripte/raw/main/AutoAuswahlSchule.user.js
+// @namespace    https://github.com/HerrWaldgott/LSS-Scripte/raw/main/AuswahlSchule.user.js
 // ==/UserScript==
 
 (async function() {
