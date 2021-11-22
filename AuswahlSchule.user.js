@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AuswahlSchule
-// @version      2.0.5
+// @version      2.0.6
 // @description  Auswählen für Lehrgänge (max Personen mit Lehrgang pro Wache) / Kategorien für Gebäude
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
@@ -174,22 +174,17 @@
 
         $('#btnAutoSelect').on('click', function() {
             var aSchoolings = JSON.parse(sessionStorage.aSchoolings).value;
-            var education_key = "";
             var education_caption = "";
             var maxPerBuilding = $('#maxPerBuilding').val();
             $('div.radio > label').each(function() {
                 var $label = $(this);
                 var $radio = $($label.find("input")[0]);
                 if (document.getElementById($radio.attr('id')).checked){
-                    education_key = $($label.find('input')[0]).attr("education_key");
                     education_caption = $label.text().replace(/\s/g, "");
                     return;
                 }
             });
 
-            if (education_key == ""){
-                return;
-            }
             var staffList = "";
             $.each(aSchoolings, function(i, val) {
                 $.each(val, function(j, type) {
@@ -208,48 +203,52 @@
                 var $building = $(this);
                 var $tableBody = $($($($building.find('div.panel-body')[0]).find('table')[0]).find('tbody')[0]);
                 var currCount = 0;
-                $tableBody.find('tr').each(function() {
-                    var $row = $(this);
-                    var schoolings = $($row.find('td[id^="school_personal_education"]')[0]).text().replace(/\s/g, "").split(',');
-                    if(schoolings.includes(staffList)){
-                        currCount++;
-                    }
-                });
-
-                var free = maxPerBuilding - currCount;
-                if (free > 0){
+                if($tableBody.length) {
                     $tableBody.find('tr').each(function() {
-                        if (free > 0 || $('#schooling_free').text() == "0") {
-                            var $row = $(this);
-                            var $input = $($($row.find("td")[0]).find("input")[0]);
-                            var currSchoolings = $($row.find('td[id^="school_personal_education"]')[0]).text().replace(/\s/g, "");
-                            if (!document.getElementById("noEduc").checked){
-                                if ($input.length && $input.attr(education_key) == "false" && !document.getElementById($input.attr("id")).checked){
-                                    $input.click();
-                                    free--;
-                                } else {
-                                    if ($input.length && document.getElementById($input.attr("id")).checked){
+                        var $row = $(this);
+                        var schoolings = $($row.find('td[id^="school_personal_education"]')[0]).text().replace(/\s/g, "").split(',');
+                        if(schoolings.includes(staffList)){
+                            currCount++;
+                        }
+                    });
+
+                    var free = maxPerBuilding - currCount;
+                    console.log(free);
+                    if (free > 0){
+                        $tableBody.find('tr').each(function() {
+                            if (free > 0 || $('#schooling_free').text() == "0") {
+                                var $row = $(this);
+                                var $input = $($($row.find("td")[0]).find("input")[0]);
+                                var currSchoolings = $($row.find('td[id^="school_personal_education"]')[0]).text().replace(/\s/g, "");
+                                if (!document.getElementById("noEduc").checked){
+                                    if ($input.length && !document.getElementById($input.attr("id")).checked && !currSchoolings.includes(education_caption)){
+                                        $input.click();
                                         free--;
+                                    } else {
+                                        if ($input.length && document.getElementById($input.attr("id")).checked){
+                                            free--;
+                                        }
+                                    }
+                                } else {
+                                    if ($input.length && currSchoolings == "" && !document.getElementById($input.attr("id")).checked){
+                                        console.log("clicked");
+                                        $input.click();
+                                        free--;
+                                    } else {
+                                        if ($input.length && document.getElementById($input.attr("id")).checked){
+                                            free--;
+                                        }
                                     }
                                 }
                             } else {
-                                if ($input.length && currSchoolings == "" && !document.getElementById($input.attr("id")).checked){
-                                    $input.click();
-                                    free--;
-                                } else {
-                                    if ($input.length && document.getElementById($input.attr("id")).checked){
-                                        free--;
-                                    }
-                                }
+                                return;
                             }
-                        } else {
-                            return;
-                        }
-                    });
-                }
+                        });
+                    }
 
-                if ($('#schooling_free').text() == "0") {
-                    return;
+                    if ($('#schooling_free').text() == "0") {
+                        return;
+                    }
                 }
             });
         });
