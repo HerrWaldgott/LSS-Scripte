@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AuswahlSchule
-// @version      2.0.6
+// @version      2.0.7
 // @description  Auswählen für Lehrgänge (max Personen mit Lehrgang pro Wache) / Kategorien für Gebäude
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
@@ -185,12 +185,13 @@
                 }
             });
 
+
             var staffList = "";
             $.each(aSchoolings, function(i, val) {
                 $.each(val, function(j, type) {
-                    var education_Name = (type.caption + " (" + type.duration + ")").replace(/\s/g, "");
+                    var education_Name = (type.caption + "(" + type.duration + ")").replace(/\s/g, "");
                     if (education_Name == education_caption){
-                        staffList = type.staffList;
+                        staffList = type.staffList.replace(/\s/g, "");
                         return;
                     }
                 });
