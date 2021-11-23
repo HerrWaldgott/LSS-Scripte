@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name         ThwRenameManager
-// @version      1.1.3
+// @name         ThwRenameManager-Lenni
+// @version      1.1.4
 // @description  Benennt alle Fahrzeuge auf der Wache nach BOS-Richtlinien um
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
 // @grant        none
-// @namespace    https://github.com/HerrWaldgott/LSS-Scripte/raw/main/ThwRenameManager.user.js
+// @namespace    none
 // ==/UserScript==
 async function renameVehicle(vID, vName) {
     await $.post("/vehicles/" + vID, { "vehicle": { "caption": vName }, "authenticity_token": $("meta[name=csrf-token]").attr("content"), "_method": "put" });
@@ -41,6 +41,10 @@ async function renameVehicle(vID, vName) {
             `);
 
         $('#btnRename').on('click', function() {
+            var firstGKW = true;
+            var firstMzKw = true;
+            var firstMtwTz = true;
+            var firstMtwOv = true;
             $('#vehicle_table > tbody').children().each(async function() {
                 var $vehicleRow = $(this);
                 var $vehicleNameColumn = $vehicleRow.children()[1];
@@ -49,29 +53,25 @@ async function renameVehicle(vID, vName) {
                 var org = "";
                 var type = "";
                 var typeName = "";
-                var firstGKW = true;
-                var firstMzKw = true;
-                var firstMtwTz = true;
-                var firstMtwOv = true;
                 switch (vehicleType){
                     case 39:
                         if (firstGKW) {
-                            org = "22";
+                            org = "21";
                             firstGKW = false;
                         } else {
-                            org = "27";
+                            org = "26";
                         }
                         type = "/52";
                         typeName = "(GKW)";
                         break;
                     case 41:
                         if (firstMzKw) {
-                            org = "24";
+                            org = "21";
                             firstMzKw = false;
                         } else {
-                            org = "28";
+                            org = "26";
                         }
-                        type = "/54";
+                        type = "/55";
                         typeName = "(MzKw)";
                         break;
                     case 40:
@@ -159,9 +159,9 @@ async function renameVehicle(vID, vName) {
                 }
                 var vName = "";
                 if (document.getElementById('withType').checked) {
-                    vName = $('#initialName').val() + " " + org + type + " " + typeName;
+                    vName = $('#initialName').val() + "-" + org + type + " " + typeName;
                 } else {
-                    vName = $('#initialName').val() + " " + org + type;
+                    vName = $('#initialName').val() + "-" + org + type;
                 }
                 await new Promise(resolve => {
                     renameVehicle(vehicleID, vName);
