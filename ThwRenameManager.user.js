@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name         ThwRenameManager-Lenni
-// @version      1.1.4
+// @name         ThwRenameManager
+// @version      1.1.h
 // @description  Benennt alle Fahrzeuge auf der Wache nach BOS-Richtlinien um
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
 // @grant        none
-// @namespace    none
+// @namespace    https://github.com/HerrWaldgott/LSS-Scripte/edit/main/ThwRenameManager.user.js
 // ==/UserScript==
 async function renameVehicle(vID, vName) {
     await $.post("/vehicles/" + vID, { "vehicle": { "caption": vName }, "authenticity_token": $("meta[name=csrf-token]").attr("content"), "_method": "put" });
