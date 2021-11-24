@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ThwRenameManager
-// @version      1.1.h
+// @version      1.2.0
 // @description  Benennt alle Fahrzeuge auf der Wache nach BOS-Richtlinien um
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
