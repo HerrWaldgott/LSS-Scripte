@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         ThwRenameManager
-// @version      1.2.0
-// @description  Benennt alle Fahrzeuge auf der Wache nach BOS-Richtlinien um
+// @version      1.3.0
+// @description  Benennt alle Fahrzeuge auf der Wache nach BOS-Richtlinien um (THW oder analoges RD)
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
 // @grant        none
-// @namespace    https://github.com/HerrWaldgott/LSS-Scripte/edit/main/ThwRenameManager.user.js
+// @namespace    https://github.com/HerrWaldgott/LSS-Scripte/raw/main/ThwRenameManager.user.js
 // ==/UserScript==
 async function renameVehicle(vID, vName) {
     await $.post("/vehicles/" + vID, { "vehicle": { "caption": vName }, "authenticity_token": $("meta[name=csrf-token]").attr("content"), "_method": "put" });
@@ -56,22 +56,22 @@ async function renameVehicle(vID, vName) {
                 switch (vehicleType){
                     case 39:
                         if (firstGKW) {
-                            org = "21";
+                            org = "22";
                             firstGKW = false;
                         } else {
-                            org = "26";
+                            org = "27";
                         }
                         type = "/52";
                         typeName = "(GKW)";
                         break;
                     case 41:
                         if (firstMzKw) {
-                            org = "21";
+                            org = "24";
                             firstMzKw = false;
                         } else {
-                            org = "26";
+                            org = "28";
                         }
-                        type = "/55";
+                        type = "/54";
                         typeName = "(MzKw)";
                         break;
                     case 40:
@@ -159,9 +159,9 @@ async function renameVehicle(vID, vName) {
                 }
                 var vName = "";
                 if (document.getElementById('withType').checked) {
-                    vName = $('#initialName').val() + "-" + org + type + " " + typeName;
+                    vName = $('#initialName').val() + " " + org + type + " " + typeName;
                 } else {
-                    vName = $('#initialName').val() + "-" + org + type;
+                    vName = $('#initialName').val() + " " + org + type;
                 }
                 await new Promise(resolve => {
                     renameVehicle(vehicleID, vName);
@@ -171,4 +171,101 @@ async function renameVehicle(vID, vName) {
             location.reload();
         });
     }
+        if ((building.building_type == 2 || building.building_type == 20) && window.location.href == "https://www.leitstellenspiel.de/buildings/" + buildingID){
+            $('dl.dl-horizontal').append(`
+            <dt><strong>Fahrz. umbenennen:</strong></dt>
+            <dd>
+                <input type="text" class="form-controls" id="initialName" placeholder="Heros XY...">
+                <a href="#" id="btnRename" class="btn btn-xs btn-default">Nach BOS umbenennen</a>
+                <input id="withType" name="withType" type="checkbox">
+                <label class="" for="withType">Typ hinzufügen</label>
+            </dd>
+            `);
+
+            $('#btnRename').on('click', function() {
+                var indRTW = 1;
+                var indNEF = 1;
+                var indKTW = 1;
+                var indLNA = 1;
+                var indORGL = 1;
+                var indGRTW = 1;
+                var indNAW = 1;
+                var indITW = 1;
+                $('#vehicle_table > tbody').children().each(async function() {
+                    var $vehicleRow = $(this);
+                    var $vehicleNameColumn = $vehicleRow.children()[1];
+                    var vehicleID = $vehicleNameColumn.childNodes[1].href.split("/")[4];
+                    var vehicleType = cVehicles.filter(v => v.id == vehicleID)[0].vehicle_type;
+                    var count = "";
+                    var type = "";
+                    var typeName = "";
+
+                    switch (vehicleType){
+                        case 28://RTW
+                            count = ("0" + indRTW).substr(-2);
+                            indRTW += 1;
+                            type = "/83/";
+                            typeName = "(RTW)";
+                            break;
+                        case 29://NEF
+                            count = ("0" + indNEF).substr(-2);
+                            indNEF++;
+                            type = "/82/";
+                            typeName = "(NEF)";
+                            break;
+                        case 38://KTW
+                            count = ("0" + indKTW).substr(-2);
+                            indKTW++;
+                            type = "/85/";
+                            typeName = "(KTW)";
+                            break;
+                        case 55://LNA
+                            count = ("0" + indLNA).substr(-2);
+                            indLNA++;
+                            type = "/07/";
+                            typeName = "(LNA)";
+                            break;
+                        case 56://OrgL
+                            count = ("0" + indORGL).substr(-2);
+                            indORGL++;
+                            type = "/08/";
+                            typeName = "(OrgL)";
+                            break;
+                        case 73://GRTW
+                            count = ("0" + indGRTW).substr(-2);
+                            indGRTW++;
+                            type = "/88/";
+                            typeName = "(GRTW)";
+                            break;
+                        case 74://NAW
+                            count = ("0" + indNAW).substr(-2);
+                            indNAW++;
+                            type = "/81/";
+                            typeName = "(NAW)";
+                            break;
+                        case 97://ITW
+                            count = ("0" + indITW).substr(-2);
+                            indITW++;
+                            type = "/87/";
+                            typeName = "(ITW)";
+                            break;
+                        default:
+                            console.log("Rename ERROR: " + vehicleType + " not found!");
+                            break;
+                    }
+                    var vName = "";
+                    if (document.getElementById('withType').checked) {
+                        vName = $('#initialName').val() + type + count + " " + typeName;
+                    } else {
+                        vName = $('#initialName').val() + type + count;
+                    }
+                    await new Promise(resolve => {
+                        console.log(vName);
+                        renameVehicle(vehicleID, vName);
+                        window.setTimeout(resolve, 100);
+                    });
+                });
+                location.reload();
+            });
+        }
 })();
