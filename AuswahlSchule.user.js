@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AuswahlSchule
-// @version      2.0.7
+// @version      2.1.0
 // @description  Auswählen für Lehrgänge (max Personen mit Lehrgang pro Wache) / Kategorien für Gebäude
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
@@ -35,7 +35,7 @@
                 <label class="" for="noEduc">nur Personal ohne Ausbildung</label>
             </div>
         `);
-        
+
         if ($('#tabsDiv').length) {
         } else {
             $('#accordion').after(`
@@ -173,6 +173,9 @@
         }
 
         $('#btnAutoSelect').on('click', function() {
+            sessionStorage.setItem('lastCountPersonal', $('#maxPerBuilding').val());
+            sessionStorage.setItem('lastCountWithEducation', document.getElementById("noEduc").checked);
+
             var aSchoolings = JSON.parse(sessionStorage.aSchoolings).value;
             var education_caption = "";
             var maxPerBuilding = $('#maxPerBuilding').val();
@@ -253,5 +256,10 @@
                 }
             });
         });
+
+        if (sessionStorage.lastCountPersonal){
+            $('#maxPerBuilding').val(sessionStorage.lastCountPersonal);
+            $('#noEduc').attr('checked', (sessionStorage.lastCountWithEducation === "true"));
+        }
     }
 })();
