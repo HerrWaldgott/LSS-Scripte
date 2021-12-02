@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         AlarmierenUndZurueck
-// @version      1.1.0
+// @version      1.1.1
 // @description  Erstellt einen Knopf zum Alarmieren und zum vorherigen Einsatz springen
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/missions/*
 // @grant        none
-// @namespace    https://github.com/HerrWaldgott/LSS-Scripte/blob/main/AlarmierenUndZurueck.user.js
+// @namespace    https://github.com/HerrWaldgott/LSS-Scripte/raw/main/AlarmierenUndZurueck.user.js
 // ==/UserScript==
 
 (function() {
