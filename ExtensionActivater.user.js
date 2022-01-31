@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GebäudeAktivierer
-// @version      1.2.0
+// @version      1.2.1
 // @description  Gebäudetypen auf einem Klick aktiveren oder deaktiveren
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/
@@ -27,36 +27,36 @@ function sleep(delay) {
     while (new Date().getTime() < start + delay);
 }
 
-var aBuildings = aBuildings || [];
-var aBuildingTypes = aBuildingTypes || [];
+var cBuildings = cBuildings || [];
+var cBuildingTypes = cBuildingTypes || [];
 
 (async function () {
 	'use strict';
 
     await $.getScript("https://api.lss-cockpit.de/lib/utf16convert.js");
 
-    if (!sessionStorage.aBuildings || JSON.parse(sessionStorage.aBuildings).lastUpdate < (new Date().getTime() - 5 * 1000 * 60) || JSON.parse(sessionStorage.aBuildings).userId != user_id) {
-        await $.getJSON('/api/buildings').done(data => sessionStorage.setItem('aBuildings', JSON.stringify({ lastUpdate: new Date().getTime(), value: LZString.compressToUTF16(JSON.stringify(data)), userId: user_id })));
+    if (!sessionStorage.cBuildings || JSON.parse(sessionStorage.cBuildings).lastUpdate < (new Date().getTime() - 5 * 1000 * 60) || JSON.parse(sessionStorage.cBuildings).userId != user_id) {
+        await $.getJSON('/api/buildings').done(data => sessionStorage.setItem('cBuildings', JSON.stringify({ lastUpdate: new Date().getTime(), value: LZString.compressToUTF16(JSON.stringify(data)), userId: user_id })));
     }
-    var aBuildings = JSON.parse(LZString.decompressFromUTF16(JSON.parse(sessionStorage.aBuildings).value));
+    var cBuildings = JSON.parse(LZString.decompressFromUTF16(JSON.parse(sessionStorage.cBuildings).value));
 
-    if (!sessionStorage.aBuildingTypes || JSON.parse(sessionStorage.aBuildingTypes).lastUpdate < (new Date().getTime() - 5 * 1000 * 60) || JSON.parse(sessionStorage.aBuildingTypes).userId != user_id) {
-        await $.getJSON('https://proxy.lss-manager.de/v4/api/de_DE/buildings.json').done(data => sessionStorage.setItem('aBuildingTypes', JSON.stringify({ lastUpdate: new Date().getTime(), value: LZString.compressToUTF16(JSON.stringify(data)), userId: user_id })));
+    if (!sessionStorage.cBuildingTypes || JSON.parse(sessionStorage.cBuildingTypes).lastUpdate < (new Date().getTime() - 5 * 1000 * 60) || JSON.parse(sessionStorage.cBuildingTypes).userId != user_id) {
+        await $.getJSON('https://proxy.lss-manager.de/v4/api/de_DE/buildings.json').done(data => sessionStorage.setItem('cBuildingTypes', JSON.stringify({ lastUpdate: new Date().getTime(), value: LZString.compressToUTF16(JSON.stringify(data)), userId: user_id })));
     }
-    var aBuildingTypes = JSON.parse(LZString.decompressFromUTF16(JSON.parse(sessionStorage.aBuildingTypes).value));
+    var cBuildingTypes = JSON.parse(LZString.decompressFromUTF16(JSON.parse(sessionStorage.cBuildingTypes).value));
 
     function activate(type, enabled) {
         var blob = new Blob([`onmessage = function(e){
                                  var buildingType = null;
-                                 var aBuildingTypes = e.data[3];
-                                 var aBuildings = e.data[2];
+                                 var cBuildingTypes = e.data[3];
+                                 var cBuildings = e.data[2];
                                  var type = e.data[0];
                                  var enabled = e.data[1];
-                                 for (var i = 0; i < aBuildings.length; i++) {
-			                         var b = aBuildings[i];
+                                 for (var i = 0; i < cBuildings.length; i++) {
+			                         var b = cBuildings[i];
                                      b.extensions.forEach((e, ind) => {
                                          if (e.caption.includes(type) && e.enabled == enabled){
-                                             aBuildingTypes[b.building_type].extensions.forEach((apiE, apiInd) => {
+                                             cBuildingTypes[b.building_type].extensions.forEach((apiE, apiInd) => {
                                                  if (e.caption == apiE.caption) {
                                                      var url = "https://www.leitstellenspiel.de/buildings/" + b.id + "/extension_ready/" + apiInd + "/" + b.id;
                                                      self.postMessage(['url', url, i]);
@@ -67,34 +67,34 @@ var aBuildingTypes = aBuildingTypes || [];
                                      });
                                      self.postMessage(['status', i]);
                                  }
-                                 self.postMessage(['finish', aBuildings]);
+                                 self.postMessage(['finish', cBuildings]);
                              }`], {type: 'text/javascript'})
         var url = URL.createObjectURL(blob)
         var worker = new Worker(url)
         worker.onmessage = function(e){
             if (e.data[0] == 'status') {
-                document.getElementById('counter').innerHTML = ((e.data[1] + 1) + " / " + aBuildings.length + " Gebäude überprüft");
+                document.getElementById('counter').innerHTML = ((e.data[1] + 1) + " / " + cBuildings.length + " Gebäude überprüft");
             } else if (e.data[0] == 'url') {
                 sendPost(e.data[1]);
                 sleep(200);
             } else if (e.data[0] == 'finish') {
                 document.getElementById('counter').innerHTML = ("alle Gebäude überprüft");
-                aBuildings = e.data[1];
+                cBuildings = e.data[1];
             }
         }
-        worker.postMessage([type, enabled, aBuildings, aBuildingTypes]);
+        worker.postMessage([type, enabled, cBuildings, cBuildingTypes]);
     }
 
 	function activateBuilding(type, enabled) {
-		document.getElementById('counter').innerHTML = ("0 / " + aBuildings.length + " Gebäude überprüft");
+		document.getElementById('counter').innerHTML = ("0 / " + cBuildings.length + " Gebäude überprüft");
         var blob = new Blob([`onmessage = function(e){
-                                 var aBuildingTypes = e.data[3];
-                                 var aBuildings = e.data[2];
+                                 var cBuildingTypes = e.data[3];
+                                 var cBuildings = e.data[2];
                                  var type = e.data[0];
                                  var enabled = e.data[1];
                                  var this = e.data[4];
-                                 for (var i = 0; i < aBuildings.length; i++) {
-                                     var b = aBuildings[i];
+                                 for (var i = 0; i < cBuildings.length; i++) {
+                                     var b = cBuildings[i];
                                      if (b.building_type == type) {
                                          this.get("https://www.leitstellenspiel.de/buildings/" + b.id, function (data, status) {
                                              var parser = new DOMParser();
@@ -115,22 +115,22 @@ var aBuildingTypes = aBuildingTypes || [];
                                      }
                                      self.postMessage(['status', i]);
                                      }
-                                 self.postMessage(['finish', aBuildings]);
+                                 self.postMessage(['finish', cBuildings]);
                              }`], {type: 'text/javascript'})
         var url = URL.createObjectURL(blob)
         var worker = new Worker(url)
         worker.onmessage = function(e){
             if (e.data[0] == 'status') {
-                document.getElementById('counter').innerHTML = ((e.data[1] + 1) + " / " + aBuildings.length + " Gebäude überprüft");
+                document.getElementById('counter').innerHTML = ((e.data[1] + 1) + " / " + cBuildings.length + " Gebäude überprüft");
             } else if (e.data[0] == 'url') {
                 sendGet(e.data[1]);
                 sleep(300);
             } else if (e.data[0] == 'finish') {
                 document.getElementById('counter').innerHTML = ("alle Gebäude überprüft");
-                aBuildings = e.data[1];
+                cBuildings = e.data[1];
             }
         }
-        worker.postMessage([type, enabled, aBuildings, aBuildingTypes, $]);
+        worker.postMessage([type, enabled, cBuildings, cBuildingTypes, $]);
 	}
 
 	$('body').append(`
@@ -267,7 +267,7 @@ var aBuildingTypes = aBuildingTypes || [];
 		</div>
 	`);
 	
-	$('#counter').html(aBuildings.length + " Gebäude");
+	$('#counter').html(cBuildings.length + " Gebäude");
 
 	$('.nav.navbar-nav.navbar-right').append(`
 		<li class="dropdown" id="builActivate">
