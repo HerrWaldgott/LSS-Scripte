@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ThwRenameManager
-// @version      1.3.0
+// @version      1.3.1
 // @description  Benennt alle Fahrzeuge auf der Wache nach BOS-Richtlinien um (THW oder analoges RD)
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
@@ -42,9 +42,9 @@ async function renameVehicle(vID, vName) {
 
         $('#btnRename').on('click', function() {
             var firstGKW = true;
-            var firstMzKw = true;
+            var firstMzGW = true;
             var firstMtwTz = true;
-            var firstMtwOv = true;
+            var firstMtwO = true;
             $('#vehicle_table > tbody').children().each(async function() {
                 var $vehicleRow = $(this);
                 var $vehicleNameColumn = $vehicleRow.children()[1];
@@ -65,14 +65,14 @@ async function renameVehicle(vID, vName) {
                         typeName = "(GKW)";
                         break;
                     case 41:
-                        if (firstMzKw) {
+                        if (firstMzGW) {
                             org = "24";
-                            firstMzKw = false;
+                            firstMzGW = false;
                         } else {
                             org = "28";
                         }
-                        type = "/54";
-                        typeName = "(MzKw)";
+                        type = "/55";
+                        typeName = "(MzGW (FGr N))";
                         break;
                     case 40:
                         if (firstMtwTz) {
@@ -86,12 +86,12 @@ async function renameVehicle(vID, vName) {
                         break;
                     case 93:
                         org = "44";
-                        if (firstMtwOv){
+                        if (firstMtwO){
                             type = "/22";
                         } else {
                             type = "/23";
                         }
-                        typeName = "(MTW-OV)";
+                        typeName = "(MTW-O)";
                         break;
                     case 92:
                         org = "";
@@ -146,16 +146,44 @@ async function renameVehicle(vID, vName) {
                         org = "";
                         type = "Anh SwPu";
                         break;
-                    case 99:
+                    case 123:
                         org = "47";
                         type = "/43";
-                        typeName = "(LKW 7 Lbw)";
+                        typeName = "(LKW 7 Lbw (FGr WP))";
                         break;
                     case 100:
                         org = "47";
                         type = "/34";
                         typeName = "(MLW 4)";
                         break;
+                    case 122:
+                        org = "32";
+                        type = "/43";
+                        typeName = "(LKW 7 Lbw (FGr E))";
+                        break;
+                    case 112:
+                        org = "";
+                        type = "NEA200";
+                        break;
+                    case 110:
+                        org = "";
+                        type = "NEA50";
+                        break;
+                    case 124:
+                        org = "86";
+                        type = "/25";
+                        typeName = "(MTW-OV)";
+                        break;
+                    case 125:
+                        org = "76";
+                        type = "/25";
+                        typeName = "(MTW-Tr UL)";
+                        break;
+                    case 109:
+                        org = "38";
+                        type = "/55";
+                        typeName = "(MzGW SB)";
+                         break;
                 }
                 var vName = "";
                 if (document.getElementById('withType').checked) {

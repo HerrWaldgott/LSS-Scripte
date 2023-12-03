@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GebäudeAktivierer
-// @version      1.2.1
+// @version      1.2.2
 // @description  Gebäudetypen auf einem Klick aktiveren oder deaktiveren
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/
@@ -41,7 +41,7 @@ var cBuildingTypes = cBuildingTypes || [];
     var cBuildings = JSON.parse(LZString.decompressFromUTF16(JSON.parse(sessionStorage.cBuildings).value));
 
     if (!sessionStorage.cBuildingTypes || JSON.parse(sessionStorage.cBuildingTypes).lastUpdate < (new Date().getTime() - 5 * 1000 * 60) || JSON.parse(sessionStorage.cBuildingTypes).userId != user_id) {
-        await $.getJSON('https://proxy.lss-manager.de/v4/api/de_DE/buildings.json').done(data => sessionStorage.setItem('cBuildingTypes', JSON.stringify({ lastUpdate: new Date().getTime(), value: LZString.compressToUTF16(JSON.stringify(data)), userId: user_id })));
+        await $.getJSON('https://api.lss-manager.de/de_DE/buildings.json').done(data => sessionStorage.setItem('cBuildingTypes', JSON.stringify({ lastUpdate: new Date().getTime(), value: LZString.compressToUTF16(JSON.stringify(data)), userId: user_id })));
     }
     var cBuildingTypes = JSON.parse(LZString.decompressFromUTF16(JSON.parse(sessionStorage.cBuildingTypes).value));
 
@@ -163,6 +163,10 @@ var cBuildingTypes = cBuildingTypes || [];
 							<button href="#"  id="fw_flu_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Flughafen deaktivieren</button>
 							<button href="#"  id="fw_gro_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Großwache deaktivieren</button>
 							<button href="#"  id="fw_wer_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Werkfeuerwehr deaktivieren</button>
+                            <button href="#"  id="fw_nea50_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Netzersatzanlage 50 deaktivieren</button>
+                            <button href="#"  id="fw_nea200_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Netzersatzanlage 200 deaktivieren</button>
+                            <button href="#"  id="fw_gl_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Großlüfter deaktivieren</button>
+                            <button href="#"  id="fw_dro_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Drohneneinheit deaktivieren</button>
 						</div>
 						<div class="col-md-6">
 							<button href="#"  id="fw_abroll_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Abrollbehälter aktivieren</button>
@@ -171,6 +175,10 @@ var cBuildingTypes = cBuildingTypes || [];
 							<button href="#"  id="fw_flu_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Flughafen aktivieren</button>
 							<button href="#"  id="fw_gro_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Großwache aktivieren</button>
 							<button href="#"  id="fw_wer_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Werkfeuerwehr aktivieren</button>
+                            <button href="#"  id="fw_nea50_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Netzersatzanlage 50 aktivieren</button>
+                            <button href="#"  id="fw_nea200_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Netzersatzanlage 200 aktivieren</button>
+                            <button href="#"  id="fw_gl_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Großlüfter aktivieren</button>
+                            <button href="#"  id="fw_dro_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Drohneneinheit aktivieren</button>
 						</div>
 					</div>
 				</div>
@@ -196,6 +204,7 @@ var cBuildingTypes = cBuildingTypes || [];
 							<button href="#"  id="pd_dhs_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Diensthundestaffel deaktivieren</button>
 							<button href="#"  id="pd_kri_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Kriminalpolizei deaktivieren</button>
                             <button href="#"  id="pd_dgl_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Dienstgruppenleitung deaktivieren</button>
+                            <button href="#"  id="pd_mot_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Motorradstaffel aktivieren</button>
 							<button href="#"  id="pd_2z1_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">2. Zug der 1. Hundertschaft deaktivieren</button>
 							<button href="#"  id="pd_3z1_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">3. Zug der 1. Hundertschaft deaktivieren</button>
 							<button href="#"  id="pd_gef_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Gefangenenkraftwagen deaktivieren</button>
@@ -209,7 +218,8 @@ var cBuildingTypes = cBuildingTypes || [];
 							<button href="#"  id="pd_dhs_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Diensthundestaffel aktivieren</button>
 							<button href="#"  id="pd_kri_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Kriminalpolizei aktivieren</button>
                             <button href="#"  id="pd_dgl_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Dienstgruppenleitung aktivieren</button>
-							<button href="#"  id="pd_2z1_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">2. Zug der 1. Hundertschaft aktivieren</button>
+							<button href="#"  id="pd_mot_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Motorradstaffel aktivieren</button>
+                            <button href="#"  id="pd_2z1_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">2. Zug der 1. Hundertschaft aktivieren</button>
 							<button href="#"  id="pd_3z1_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">3. Zug der 1. Hundertschaft aktivieren</button>
 							<button href="#"  id="pd_gef_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Gefangenenkraftwagen aktivieren</button>
 							<button href="#"  id="pd_was_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Wasserwerfer aktivieren</button>
@@ -223,26 +233,32 @@ var cBuildingTypes = cBuildingTypes || [];
 				<div role="tabpanel" class="tab-pane" id="thw" style="padding: 15px;">
 					<div class="row">
 						<div class="col-md-6">
-							<button href="#"  id="thw_1zb_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">1. Zug: Bergungsgruppe 2 deaktivieren</button>
+							<button href="#"  id="thw_1zb_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">1. Technischer Zug: Fachgruppe Notversorgung/Notinstandsetzung deaktivieren</button>
 							<button href="#"  id="thw_1zz_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">1. Zug: Zugtrupp deaktivieren</button>
-							<button href="#"  id="thw_2zg_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">2. Zug: Grundvorraussetzung deaktivieren</button>
-							<button href="#"  id="thw_2zb_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">2. Zug: Bergungsgruppe 2 deaktivieren</button>
+							<button href="#"  id="thw_2zg_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">2. Technischer Zug: Fachgruppe Notversorgung/Notinstandsetzung deaktivieren</button>
+							<button href="#"  id="thw_2zb_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">2. Zug: Bergungsgruppe deaktivieren</button>
 							<button href="#"  id="thw_2zz_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">2. Zug: Zugtrupp deaktivieren</button>
 							<button href="#"  id="thw_fgr_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Fachgruppe Räumen deaktivieren</button>
 							<button href="#"  id="thw_fgw_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Fachgruppe Wassergefahren deaktivieren</button>
 							<button href="#"  id="thw_fgo_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Fachgruppe Ortung deaktivieren</button>
 							<button href="#"  id="thw_fwp_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Fachgruppe Wasserschaden/Pumpen deaktivieren</button>
+                            <button href="#"  id="thw_fsb_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Fachgruppe Schwere Bergung deaktivieren</button>
+                            <button href="#"  id="thw_fge_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Fachgruppe Elektroversorgung deaktivieren</button>
+                            <button href="#"  id="thw_tul_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Trupp Unbemannte Luftfahrtsysteme deaktivieren</button>
 						</div>
 						<div class="col-md-6">
-							<button href="#"  id="thw_1zb_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">1. Zug: Bergungsgruppe 2 aktivieren</button>
+							<button href="#"  id="thw_1zb_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">1. Technischer Zug: Fachgruppe Notversorgung/Notinstandsetzung aktivieren</button>
 							<button href="#"  id="thw_1zz_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">1. Zug: Zugtrupp aktivieren</button>
-							<button href="#"  id="thw_2zg_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">2. Zug: Grundvorraussetzung aktivieren</button>
-							<button href="#"  id="thw_2zb_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">2. Zug: Bergungsgruppe 2 aktivieren</button>
+							<button href="#"  id="thw_2zg_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">2. Technischer Zug: Fachgruppe Notversorgung/Notinstandsetzung aktivieren</button>
+							<button href="#"  id="thw_2zb_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">2. Zug: Bergungsgruppe aktivieren</button>
 							<button href="#"  id="thw_2zz_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">2. Zug: Zugtrupp aktivieren</button>
 							<button href="#"  id="thw_fgr_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Fachgruppe Räumen aktivieren</button>
 							<button href="#"  id="thw_fgw_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Fachgruppe Wassergefahren aktivieren</button>
 							<button href="#"  id="thw_fgo_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Fachgruppe Ortung aktivieren</button>
 							<button href="#"  id="thw_fwp_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Fachgruppe Wasserschaden/Pumpen aktivieren</button>
+                            <button href="#"  id="thw_fsb_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Fachgruppe Schwere Bergung aktivieren</button>
+                            <button href="#"  id="thw_fge_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Fachgruppe Elektroversorgung aktivieren</button>
+                            <button href="#"  id="thw_tul_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Trupp Unbemannte Luftfahrtsysteme aktivieren</button>
 						</div>
 					</div>
 				</div>
@@ -253,12 +269,16 @@ var cBuildingTypes = cBuildingTypes || [];
 							<button href="#"  id="rd_sani_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Sanitätsdienst deaktivieren</button>
 							<button href="#"  id="rd_was_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Wasserrettung deaktivieren</button>
 							<button href="#"  id="rd_rhs_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Rettungshundestaffel (SEG) deaktivieren</button>
+                            <button href="#"  id="rd_dro_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">SEG Drohne deaktivieren</button>
+                            <button href="#"  id="rd_btd_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Betreuungs- und Verpflegungsdienst deaktivieren</button>
 						</div>
 						<div class="col-md-6">
 							<button href="#"  id="rd_fuh_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Führung aktivieren</button>
 							<button href="#"  id="rd_sani_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Sanitätsdienst aktivieren</button>
 							<button href="#"  id="rd_was_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Wasserrettung aktivieren</button>
 							<button href="#"  id="rd_rhs_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Rettungshundestaffel (SEG) aktivieren</button>
+                            <button href="#"  id="rd_dro_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">SEG Drohne aktivieren</button>
+                            <button href="#"  id="rd_btd_ac" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Betreuungs- und Verpflegungsdienst aktivieren</button>
 						</div>
 					</div>
 				</div>
@@ -315,13 +335,27 @@ var cBuildingTypes = cBuildingTypes || [];
     $('#rd_rhs_ac').on('click', function(){
         activate("Rettungshundestaffel", false);
     });
+    $('#rd_dro_de').on('click', function(){
+        activate("SEG Drohne", true);
+    });
+
+    $('#rd_dro_ac').on('click', function(){
+        activate("SEG Drohne", false);
+    });
+    $('#rd_btd_de').on('click', function(){
+        activate("Betreuungs- und Verpflegungsdienst", true);
+    });
+
+    $('#rd_btd_ac').on('click', function(){
+        activate("Betreuungs- und Verpflegungsdienst", false);
+    });
 
 	$('#thw_1zb_de').on('click', function(){
-        activate("1. Technischer Zug: Bergungsgruppe 2", true);
+        activate("1. Technischer Zug: Fachgruppe Notversorgung/Notinstandsetzung", true);
     });
 
     $('#thw_1zb_ac').on('click', function(){
-        activate("1. Technischer Zug: Bergungsgruppe 2", false);
+        activate("1. Technischer Zug: Fachgruppe Notversorgung/Notinstandsetzung", false);
     });
 
 	$('#thw_1zz_de').on('click', function(){
@@ -333,19 +367,19 @@ var cBuildingTypes = cBuildingTypes || [];
     });
 
 	$('#thw_2zg_de').on('click', function(){
-        activate("2. Technischer Zug - Grundvorraussetzungen", true);
+        activate("2. Technischer Zug: Fachgruppe Notversorgung/Notinstandsetzung", true);
     });
 
     $('#thw_2zg_ac').on('click', function(){
-        activate("2. Technischer Zug - Grundvorraussetzungen", false);
+        activate("2. Technischer Zug: Fachgruppe Notversorgung/Notinstandsetzung", false);
     });
 
 	$('#thw_2zb_de').on('click', function(){
-        activate("2. Technischer Zug: Bergungsgruppe 2", true);
+        activate("2. Technischer Zug: Bergungsgruppe", true);
     });
 
     $('#thw_2zb_ac').on('click', function(){
-        activate("2. Technischer Zug: Bergungsgruppe 2", false);
+        activate("2. Technischer Zug: Bergungsgruppe", false);
     });
 
 	$('#thw_2zz_de').on('click', function(){
@@ -387,6 +421,27 @@ var cBuildingTypes = cBuildingTypes || [];
     $('#thw_fwp_ac').on('click', function(){
         activate("Fachgruppe Wasserschaden/Pumpen", false);
     });
+    $('#thw_fsb_de').on('click', function(){
+        activate("Fachgruppe Schwere Bergung", true);
+    });
+
+    $('#thw_fsb_ac').on('click', function(){
+        activate("Fachgruppe Schwere Bergung", false);
+    });
+    $('#thw_fge_de').on('click', function(){
+        activate("Fachgruppe Elektroversorgung", true);
+    });
+
+    $('#thw_fge_ac').on('click', function(){
+        activate("Fachgruppe Elektroversorgung", false);
+    });
+    $('#thw_tul_de').on('click', function(){
+        activate("Trupp Unbemannte Luftfahrtsysteme", true);
+    });
+
+    $('#thw_tul_ac').on('click', function(){
+        activate("Trupp Unbemannte Luftfahrtsysteme", false);
+    });
 
 	$('#pd_dhs_de').on('click', function(){
         activate("Diensthundestaffel", true);
@@ -410,6 +465,13 @@ var cBuildingTypes = cBuildingTypes || [];
 
     $('#pd_dgl_ac').on('click', function(){
         activate("Dienstgruppenleitung", false);
+    });
+    $('#pd_mot_de').on('click', function(){
+        activate("Motorradstaffel", true);
+    });
+
+    $('#pd_mot_ac').on('click', function(){
+        activate("Motorradstaffel", false);
     });
 
 	$('#pd_2z1_de').on('click', function(){
@@ -554,5 +616,33 @@ var cBuildingTypes = cBuildingTypes || [];
 
     $('#fw_wer_ac').on('click', function(){
         activate("Werkfeuerwehr", false);
+    });
+    $('#fw_nea50_de').on('click', function(){
+        activate("Netzersatzanlage 50", true);
+    });
+
+    $('#fw_nea50_ac').on('click', function(){
+        activate("Netzersatzanlage 50", false);
+    });
+    $('#fw_nea200_de').on('click', function(){
+        activate("Netzersatzanlage 200", true);
+    });
+
+    $('#fw_nea200_ac').on('click', function(){
+        activate("Netzersatzanlage 200", false);
+    });
+    $('#fw_gl_de').on('click', function(){
+        activate("Großlüfter", true);
+    });
+
+    $('#fw_gl_ac').on('click', function(){
+        activate("Großlüfter", false);
+    });
+    $('#fw_dro_de').on('click', function(){
+        activate("Drohneneinheit", true);
+    });
+
+    $('#fw_dro_ac').on('click', function(){
+        activate("Drohneneinheit", false);
     });
 })();

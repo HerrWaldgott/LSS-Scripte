@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AuswahlSchule
-// @version      2.1.0
+// @version      2.1.1
 // @description  Auswählen für Lehrgänge (max Personen mit Lehrgang pro Wache) / Kategorien für Gebäude
 // @author       HerrWaldgott
 // @include      *://www.leitstellenspiel.de/buildings/*
@@ -19,7 +19,7 @@
     var cBuildings = JSON.parse(LZString.decompressFromUTF16(JSON.parse(sessionStorage.cBuildings).value));
 
     if (!sessionStorage.aSchoolings || JSON.parse(sessionStorage.aSchoolings).lastUpdate < (new Date().getTime() - 5 * 1000 * 60)) {
-        await $.getJSON('https://proxy.lss-manager.de/v4/api/de_DE/schoolings.json').done(data => sessionStorage.setItem('aSchoolings', JSON.stringify({ lastUpdate: new Date().getTime(), value: data })));
+        await $.getJSON('https://api.lss-manager.de/de_DE/schoolings.json').done(data => sessionStorage.setItem('aSchoolings', JSON.stringify({ lastUpdate: new Date().getTime(), value: data })));
     }
 
     var buildingID = (window.location.href.split("/")[4]).replace("#", "");
