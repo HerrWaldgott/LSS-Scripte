@@ -163,6 +163,7 @@ var cBuildingTypes = cBuildingTypes || [];
 							<button href="#"  id="fw_flu_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Flughafen deaktivieren</button>
 							<button href="#"  id="fw_gro_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Großwache deaktivieren</button>
 							<button href="#"  id="fw_wer_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Werkfeuerwehr deaktivieren</button>
+                            <button href="#"  id="fw_nea50_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Netzersatzanlage 50 deaktivieren</button>
                             <button href="#"  id="fw_nea200_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Netzersatzanlage 200 deaktivieren</button>
                             <button href="#"  id="fw_gl_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Großlüfter deaktivieren</button>
                             <button href="#"  id="fw_dro_de" class="btn btn-success" style="display:block; margin-bottom:.5rem;">Drohneneinheit deaktivieren</button>
